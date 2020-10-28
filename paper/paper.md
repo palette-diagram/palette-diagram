@@ -27,9 +27,7 @@ Even when we deal with a large set of categorical data, if the data have an intr
 A palette diagram is a visualization tool for a set of categorical data without an intrinsic order. 
 Examples include a large set of count data (a contingency table with a large number of columns or rows) and a result of Bayesian inference in which we have a posterior probability distribution for each element of the input dataset. 
 
-![Schematic figures for the construction of palette diagrams.\label{fig:Schematic}](./figures/fig_palette_diagrams.pdf)
-
-The package provides two types of palette diagrams  (see Fig. \autoref{fig:Schematic} for illustrations): 
+The package provides two types of palette diagrams  (see \autoref{fig:Schematic} for illustrations): 
 
 **Linear palette diagram:** 
 This is a stream plot (or a stack plot with a varying axis), which is usually used for plotting time series data. 
@@ -45,6 +43,7 @@ The central part indicates the color of the dominant category within each catego
 
 In both types of palette diagrams, the only required input is a set of categorical datasets. 
 
+![Schematic figures for the construction of palette diagrams.\label{fig:Schematic}](./figures/fig_palette_diagrams.pdf)
 
 ## Order optimization
 We denote the dimension of each categorical data as $K$ and the number of categorical data as $N$. 
@@ -75,7 +74,7 @@ where $\eta$ is the learning rate.
 
 In Sammon's nonlinear mapping (or the equivalent metric MDS) [@LeeVerleysen2007], each term in the objective function is penalized by a weight $1/D_{ij}$. 
 However, such a penalization is problematic because the case with $D_{ij}=0$ may not be rare in a set of categorical data. 
-Moreover, empirically, Eq.~(\autoref{eq:ObjectiveFunction}) performs better than a variant of Sammon's nonlinear mapping in which the penalty is omitted for the pairs with $D_{ij}=0$. 
+Moreover, empirically, (\autoref{eq:ObjectiveFunction}) performs better than a variant of Sammon's nonlinear mapping in which the penalty is omitted for the pairs with $D_{ij}=0$. 
 If we replace the angle-based distance (\autoref{eq:AngularDistance}) with the inner product $\theta_{i}\theta_{j}$ and convert the distance matrix $D$ to the Gram matrix after ``centering'' $\{ \mbox{\boldmath $y$}_{i} \}$, the above nonlinear embedding reduces to ISOMAP (pg.~76--77, [@LeeVerleysen2007]). 
 As far as we have investigated, the implemented methods generally perform well, although we have also tried several other approaches for the order optimization, including neural networks [@NIPS2019_9015] and other manifold learning methods [@JMLRvandermaaten08a][@Roweis2323].
 
