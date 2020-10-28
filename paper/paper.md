@@ -8,9 +8,14 @@ tags:
 
 authors:
   - name: Chihiro Noguchi
-    affiliation: Tokyo Institute of Technology
+    affiliation: 
   - name: Tatsuro Kawamoto^[Corresponding author]
-    affiliation: Artificial Intelligence Research Center, National Institute of Advanced Industrial Science and Technology, Japan
+    affiliation: 2
+affiliations:
+ - name: Department of Mathematical and Computing Science, Tokyo Institute of Technology, Japan
+   index: 1
+ - name: Artificial Intelligence Research Center, National Institute of Advanced Industrial Science and Technology, Japan
+   index: 2
 date: 30 Octobar 2020
 bibliography: paper.bib
 
