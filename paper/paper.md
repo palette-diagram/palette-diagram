@@ -75,7 +75,7 @@ where $\eta$ is the learning rate.
 In Sammon's nonlinear mapping (or the equivalent metric MDS) [@LeeVerleysen2007], each term in the objective function is penalized by a weight $1/D_{ij}$. 
 However, such a penalization is problematic because the case with $D_{ij}=0$ may not be rare in a set of categorical data. 
 Moreover, empirically, (\autoref{eq:ObjectiveFunction}) performs better than a variant of Sammon's nonlinear mapping in which the penalty is omitted for the pairs with $D_{ij}=0$. 
-If we replace the angle-based distance (\autoref{eq:AngularDistance}) with the inner product $\theta_{i}\theta_{j}$ and convert the distance matrix $D$ to the Gram matrix after ``centering'' $\{ \vec{y}_{i} \}$, the above nonlinear embedding reduces to ISOMAP (pg.~76--77, [@LeeVerleysen2007]). 
+If we replace the angle-based distance (\autoref{eq:AngularDistance}) with the inner product $\theta_{i}\theta_{j}$ and convert the distance matrix $D$ to the Gram matrix after "centering" $\{ \vec{y}_{i} \}$, the above nonlinear embedding reduces to ISOMAP (pg.~76--77, [@LeeVerleysen2007]). 
 As far as we have investigated, the implemented methods generally perform well, although we have also tried several other approaches for the order optimization, including neural networks [@NIPS2019_9015] and other manifold learning methods [@JMLRvandermaaten08a][@Roweis2323].
 
 
