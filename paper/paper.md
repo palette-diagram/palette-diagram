@@ -47,14 +47,14 @@ In both types of palette diagrams, the only required input is a set of categoric
 
 ## Order optimization
 We denote the dimension of each categorical data as $K$ and the number of categorical data as $N$. 
-The input for the palette diagram is expressed as $\{ \vec{y}_{i} \}_{i=1}^{N}$, where $\mbox{\boldmath $y$}_{i}$ ($1 \le i \le N$) is a column vector for the $i$th categorical data. 
-$\{ \mbox{\boldmath $y$}_{i} \}$ is a set of $N$ data points in the $K$-dimensional space. 
-We assume that every element in $\{ \mbox{\boldmath $y$}_{i} \}$ is nonnegative. 
+The input for the palette diagram is expressed as $\{ \vec{y}_{i} \}_{i=1}^{N}$, where $\vec{y}_{i}$ ($1 \le i \le N$) is a column vector for the $i$th categorical data. 
+$\{ \vec{y}_{i} \}$ is a set of $N$ data points in the $K$-dimensional space. 
+We assume that every element in $\{ \vec{y}_{i} \}$ is nonnegative. 
 Determining the order of the $N$ elements is a dimension reduction to a one-dimensional space. 
 
 In the linear palette diagram, we use ISOMAP [@ISOMAP_Tenenbaum] for the order optimization, which is implemented in \textit{scikit-learn}. 
 For the circular palette diagram, we use the following nonlinear embedding. 
-We construct a $k$-nearest neighbor graph ($k = $n\_neighbors) from $\{ \mbox{\boldmath $y$}_{i} \}$ and generate an $N \times N$ distance matrix $D$ based on the shortest path length on the $k$-nearest neighbor graph. 
+We construct a $k$-nearest neighbor graph ($k$ = n\_neighbors) from $\{ \vec{y}_{i} \}$ and generate an $N \times N$ distance matrix $D$ based on the shortest path length on the $k$-nearest neighbor graph. 
 For the distance in the embedded space, we consider 
 \begin{equation}\label{eq:AngularDistance}
 d_{ij} = 1 - \cos(\theta_{i} - \theta_{j}), 
@@ -75,7 +75,7 @@ where $\eta$ is the learning rate.
 In Sammon's nonlinear mapping (or the equivalent metric MDS) [@LeeVerleysen2007], each term in the objective function is penalized by a weight $1/D_{ij}$. 
 However, such a penalization is problematic because the case with $D_{ij}=0$ may not be rare in a set of categorical data. 
 Moreover, empirically, (\autoref{eq:ObjectiveFunction}) performs better than a variant of Sammon's nonlinear mapping in which the penalty is omitted for the pairs with $D_{ij}=0$. 
-If we replace the angle-based distance (\autoref{eq:AngularDistance}) with the inner product $\theta_{i}\theta_{j}$ and convert the distance matrix $D$ to the Gram matrix after ``centering'' $\{ \mbox{\boldmath $y$}_{i} \}$, the above nonlinear embedding reduces to ISOMAP (pg.~76--77, [@LeeVerleysen2007]). 
+If we replace the angle-based distance (\autoref{eq:AngularDistance}) with the inner product $\theta_{i}\theta_{j}$ and convert the distance matrix $D$ to the Gram matrix after ``centering'' $\{ \vec{y}_{i} \}$, the above nonlinear embedding reduces to ISOMAP (pg.~76--77, [@LeeVerleysen2007]). 
 As far as we have investigated, the implemented methods generally perform well, although we have also tried several other approaches for the order optimization, including neural networks [@NIPS2019_9015] and other manifold learning methods [@JMLRvandermaaten08a][@Roweis2323].
 
 
