@@ -47,14 +47,14 @@ In both types of palette diagrams, the only required input is a set of categoric
 
 ## Order optimization
 We denote the dimension of each categorical data as $K$ and the number of categorical data as $N$. 
-The input for the palette diagram is expressed as $\{ \mbox{\boldmath $y$}_{i} \}_{i=1}^{N}$, where $\mbox{\boldmath $y$}_{i}$ ($1 \le i \le N$) is a column vector for the $i$th categorical data. 
+The input for the palette diagram is expressed as $\{ \vec{y}_{i} \}_{i=1}^{N}$, where $\mbox{\boldmath $y$}_{i}$ ($1 \le i \le N$) is a column vector for the $i$th categorical data. 
 $\{ \mbox{\boldmath $y$}_{i} \}$ is a set of $N$ data points in the $K$-dimensional space. 
 We assume that every element in $\{ \mbox{\boldmath $y$}_{i} \}$ is nonnegative. 
 Determining the order of the $N$ elements is a dimension reduction to a one-dimensional space. 
 
 In the linear palette diagram, we use ISOMAP [@ISOMAP_Tenenbaum] for the order optimization, which is implemented in \textit{scikit-learn}. 
 For the circular palette diagram, we use the following nonlinear embedding. 
-We construct a $k$-nearest neighbor graph ($k = $\texttt{n\_neighbors}) from $\{ \mbox{\boldmath $y$}_{i} \}$ and generate an $N \times N$ distance matrix $D$ based on the shortest path length on the $k$-nearest neighbor graph. 
+We construct a $k$-nearest neighbor graph ($k = $n\_neighbors) from $\{ \mbox{\boldmath $y$}_{i} \}$ and generate an $N \times N$ distance matrix $D$ based on the shortest path length on the $k$-nearest neighbor graph. 
 For the distance in the embedded space, we consider 
 \begin{equation}\label{eq:AngularDistance}
 d_{ij} = 1 - \cos(\theta_{i} - \theta_{j}), 
