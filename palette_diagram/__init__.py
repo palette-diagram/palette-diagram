@@ -1,0 +1,1 @@
+from palette_diagram.palette_diagram import *

@@ -1,3 +1,13 @@
+# Output files
+*.pdf
+#*.png
+*.txt
+
+.DS_Store
+
+# Pycharm
+.idea/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
