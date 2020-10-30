@@ -32,17 +32,12 @@ pip install palette-diagram
 This function generates a linear or circular palette diagram from a data table. 
 
 ```python
-palette_diagram(df,
-	palette_type='circular',
-	n_neighbors=100,
-	n_epochs=100,
-	lr=0.0005,
-	norm=True,
-	export=True,
-	export_table=True,
-	category_labels = None,
-	cmap_name = None,
-	remove_empty_sets=-1)
+import pandas as pd
+import palette_diagram as pt
+
+df = pd.read_csv('your_dataset.csv', index_col=0)
+
+pt.palette_diagram(df)
 ```
 
 
@@ -62,7 +57,7 @@ Here is how the DataFrame should look like:
 
 - The (i,k) element in the DataFrame represents a quantity for *k*th category in *i*th dataset. 
 - The DataFrame must have column names representing the category labels. 
-- The indices (the first column) will be used as the dataset ID in `data_ordering.csv`
+- The DataFrame must have indices, which will be used as the dataset ID in `data_ordering.csv`
 - The value of each cell has to be non-negative.
 - A dataset is allowed to have missing cells (`nan`). The missing cells are filled with zeros.
 
@@ -72,18 +67,18 @@ A linear palette diagram or circular palette diagram.
 
 ### Optional parameters
 
-|argument|type|description|
-|:--|--:|:--:|
-| palette_type |'circular', 'linear'|  'circular': circular palette diagram </br> 'linear': linear palette diagram|
-| n_neighbors | integer | A hyperparameter for the linear palette diagram (see below for details) |
-| n_epochs | integer | A hyperparameter for the circular palette diagram (see below for details) |
-| lr | float | A hyperparameter for the circular palette diagram (see below for details) |
-| norm | boolean | If True, each categorical dataset (row in the datamatrix) will be normalized to unity. The diagram has non-uniform layer thickness when `norm=False`. |
-| export | boolean | If True, the palette diagram will be saved as a PDF file in `./output/`. |
-| export_table | boolean | If True, the ordering of the datasets will be saved as a csv in `./output/`. |
-| category_labels | list of category labels | If provided, you can manually control the color assignment of each category by specifying the order of category labels. |
-| cmap_name | string | If a qualitative color palette in *matplotlib* is provided, the specified color map is will be used. |
-| remove\_empty\_sets | {0,1,2,-1} | 0: Remove all empty (zero-valued) rows (data) </br> 1: Remove all empty (zero-valued) columns (categories) </br> 2: Remove all empty (zero-valued) rows and columns </br> -1: Ignored |
+|argument|type|default value|description|
+|:--|:--:|:--:|:--|
+| palette_type |'circular', 'linear'| 'circular' |  'circular': circular palette diagram </br> 'linear': linear palette diagram|
+| n_neighbors | integer | 100 | A hyperparameter for the linear palette diagram (see below for details) |
+| n_epochs | integer | 100 | A hyperparameter for the circular palette diagram (see below for details) |
+| lr | float | 0.0005 | A hyperparameter for the circular palette diagram (see below for details) |
+| norm | boolean | True | If True, each categorical dataset (row in the datamatrix) will be normalized to unity. The diagram has non-uniform layer thickness when `norm=False`. |
+| export | boolean | True | If True, the palette diagram will be saved as a PDF file in `./output/`. |
+| export_table | boolean | True | If True, the ordering of the datasets will be saved as a csv in `./output/`. |
+| category_labels | list of category labels | None | If provided, you can manually control the color assignment of each category by specifying the order of category labels. |
+| cmap_name | string | None | If a qualitative color palette in *matplotlib* is provided, the specified color map is will be used. |
+| remove\_empty\_sets | {0,1,2,-1} | -1 | 0: Remove all empty (zero-valued) rows (data) </br> 1: Remove all empty (zero-valued) columns (categories) </br> 2: Remove all empty (zero-valued) rows and columns </br> -1: Ignored |
 
 
 
