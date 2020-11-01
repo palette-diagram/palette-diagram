@@ -16,10 +16,13 @@ def export_palette_diagram(palette_type):
     plt.savefig('./output/'+palette_type+'_palette_diagram.pdf')
 
 
-def export_ordering(df, order, angles):
-    data_index = df.index.tolist()
+def export_ordering(df, order, angles, index):
+    if index is None or index not in df.columns:
+        data_index = df.index.tolist()
+    else:
+        data_index = df[index].values
 
-    columns = ['data_index','ordering'] if len(angles)==0 else ['data_index','ordering','angle']
+    columns = ['data_index','ordering'] if len(angles)==0 else ['data_index','ordering','position (angle)']
     table = np.zeros((order.size, len(columns)))
     for i, odr in enumerate(order):
         table[i, 0] = data_index[i]
@@ -27,11 +30,12 @@ def export_ordering(df, order, angles):
 
     df_table = pd.DataFrame(table, columns=columns)
     df_table = df_table.sort_values('ordering')
-    df_table = df_table.drop('ordering', axis=1)
+    if len(angles)>0:
+        df_table = df_table.drop('ordering', axis=1)
 
     if len(angles) > 0:
         angle_degree = [180*angle/np.pi for angle in angles]
-        df_table['angle'] = angle_degree
+        df_table['position (angle)'] = angle_degree
 
     df_table = df_table.set_index('data_index')
     df_table.to_csv('./output/data_ordering.csv')
@@ -67,8 +71,6 @@ def equidistant_color_pallete(M):
         color_palette.append( sns.hls_palette(1, h=sim, l=LL, s=SS)[0] )
 
     return color_palette
-
-
 #---------------------------------------
 #---------------------------------------
 
@@ -146,12 +148,11 @@ def preprocessing(df, remove_empty_sets):
         df = remove_all_zeros(df, axis=1)
     return df
 
-def circular_palette_diagram(df, n_neighbors, n_epochs, lr, norm, export, export_table, category_labels, cmap_name):
+def circular_palette_diagram(df, n_neighbors, n_epochs, lr, norm, export, export_table, category_labels, cmap_name, index):
 
+    X = df.loc[:, df.columns != index].values
     if norm == True:
-        df = df.div(df.sum(axis=1), axis=0)
-
-    X = df.values
+        X = X / np.sum(X, axis=1).reshape(-1,1)
 
     Z = periodic_manifold_learning(X, n_neighbors, n_epochs, lr)
     order = np.argsort(Z.reshape(1, -1)[0])
@@ -164,10 +165,10 @@ def circular_palette_diagram(df, n_neighbors, n_epochs, lr, norm, export, export
     layer_order = np.argsort(areas)[::-1]
     X = X[:, layer_order]
 
-    category_labels_internal = df.columns.tolist()
+    category_labels_internal = df.columns[df.columns != index].tolist()
     category_labels_internal = np.array(category_labels_internal)[layer_order]
     if category_labels == None:
-        category_labels = df.columns.tolist()
+        category_labels = df.columns[df.columns != index].tolist()
 
     if cmap_name != None:
         color_palette = qualitative_color_pallete_cmap(len(category_labels), cmap_name)
@@ -223,15 +224,13 @@ def circular_palette_diagram(df, n_neighbors, n_epochs, lr, norm, export, export
         plt.tight_layout()
         export_palette_diagram(palette_type='circular')
     if export_table == True:
-        export_ordering(df, order, angles=angles)
-
-    # plt.show()
+        export_ordering(df, order, angles=angles, index=index)
 
 
-def linear_palette_diagram(df, n_neighbors, norm, export, export_table, category_labels, cmap_name):
-    category_labels_internal = df.columns.tolist()
+def linear_palette_diagram(df, n_neighbors, norm, export, export_table, category_labels, cmap_name, index):
+    category_labels_internal = df.columns[df.columns != index].tolist()
     if category_labels == None:
-        category_labels = df.columns.tolist()
+        category_labels = df.columns[df.columns != index].tolist()
 
     if cmap_name != None:
         color_palette = qualitative_color_pallete_cmap(len(category_labels), cmap_name)
@@ -243,11 +242,11 @@ def linear_palette_diagram(df, n_neighbors, norm, export, export_table, category
 
     color_codes = {name:color_palette[idx] for idx,name in enumerate(category_labels)}
     color_list = [color_codes[name] for name in category_labels_internal]
-    
-    if norm == True:
-        df = df.div(df.sum(axis=1), axis=0)
 
-    X, order = manifold_learning(df.values, n_neighbors)
+    X = df.loc[:, df.columns != index].values
+    if norm == True:
+        X = X / np.sum(X, axis=1).reshape(-1, 1)
+    X, order = manifold_learning(X, n_neighbors)
 
     fig, ax = plt.subplots(1,1,sharex=True, figsize=(12,4))
     ax.stackplot(range(X.shape[0]), X.T, labels=category_labels_internal, 
@@ -261,17 +260,18 @@ def linear_palette_diagram(df, n_neighbors, norm, export, export_table, category
         plt.tight_layout()
         export_palette_diagram(palette_type='linear')
     if export_table == True:
-        export_ordering(df, order, angles=[])
-
-    # plt.show()
+        export_ordering(df, order, angles=[], index=index)
 
 #---------------------------------------
 #---------------------------------------
 
 
 #-------- main --------
-def palette_diagram(df, palette_type='circular', n_neighbors=100, n_epochs=100, lr=0.0005, norm=True, export=True, export_table=True, category_labels=None, cmap_name=None, remove_empty_sets=-1):
-    df = preprocessing(df, remove_empty_sets)
+def palette_diagram(df, palette_type='circular', n_neighbors=100, n_epochs=100, lr=0.0005, norm=True, export=True, export_table=True, category_labels=None, cmap_name=None, remove_empty_sets=-1, index=None):
+    if index not in df.columns and index is not None:
+        print('Warning: index="{}" is not included in df.columns.'.format(index))
+
+    df.loc[:, df.columns != index] = preprocessing(df.loc[:, df.columns != index], remove_empty_sets)
 
     n_neighbors_ = n_neighbors if n_neighbors < len(df) else len(df)-1
     if n_neighbors >= len(df):
@@ -279,10 +279,10 @@ def palette_diagram(df, palette_type='circular', n_neighbors=100, n_epochs=100, 
         print('n_neighbors was replaced with len(df)-1.')
 
     if palette_type == 'circular':
-        circular_palette_diagram(df, n_neighbors_, n_epochs, lr, norm, export, export_table, category_labels, cmap_name)
+        circular_palette_diagram(df, n_neighbors_, n_epochs, lr, norm, export, export_table, category_labels, cmap_name, index)
 
     elif palette_type == 'linear':
-        linear_palette_diagram(df, n_neighbors_, norm, export, export_table, category_labels, cmap_name)
+        linear_palette_diagram(df, n_neighbors_, norm, export, export_table, category_labels, cmap_name, index)
 
     else:
         print('No option called '+palette_type+' exists.')

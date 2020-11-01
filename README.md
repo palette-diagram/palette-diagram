@@ -28,6 +28,9 @@ The central part shows indicates the color of the dominant category within a cat
 pip install palette-diagram
 ```
 
+## Demo
+You can find a demo [here](https://github.com/palette-diagram/palette-diagram/tree/main/demo).
+
 ## Usage
 This function generates a linear or circular palette diagram from a data table. 
 
@@ -35,41 +38,55 @@ This function generates a linear or circular palette diagram from a data table.
 import pandas as pd
 import palette_diagram as pt
 
-df = pd.read_csv('your_dataset.csv', index_col=0)
+df = pd.read_csv('your_dataset.csv')
 
 pt.palette_diagram(df)
 ```
 
-
-
-### input
+### Input
 
 A data table `df` in *pandas* DataFrame. 
 Each row represents a categorical data of a data element. 
 Here is how the DataFrame should look like: 
 
-|  | category A | category B | category C | category C |
-| :--- | :---: | ---: | ---: | ---: |
-| 0 | 15 | 31 | 2 | 8 |
-| 1 | 24 | nan | 45 | 112 |
-| 2 | 9 | 11 | 83 | 0 |
-| ... | ... | ... | ... | ... |
+| category A | category B | category C | category C |
+| ---: | ---: | ---: | ---: |
+| 15 | 31 | 2 | 8 |
+| 24 | 0 | 45 | 112 |
+| 9 | 11 | 83 | *nan* |
+| ... | ... | ... | ... |
 
 - The (i,k) element in the DataFrame represents a quantity for *k*th category in *i*th dataset. 
 - The DataFrame must have column names representing the category labels. 
-- The DataFrame must have indices, which will be used as the dataset ID in `data_ordering.csv`
 - The value of each cell has to be non-negative.
 - A dataset is allowed to have missing cells (`nan`). The missing cells are filled with zeros.
 
-### output
+### Input with dataset indices
+If the DataFrame has a column representing the index for each row (i.e., dataset), the column will be omitted in a palette diagram, and the indices will be used as the dataset ID in `data_ordering.csv`. For example, if your DataFrame looks like 
+
+| data_id | category A | category B | category C | category C |
+| ---: | ---: | ---: | ---: | ---: |
+| A001 | 15 | 31 | 2 | 8 |
+| A002 | 24 | 0 | 45 | 112 |
+| A003 | 9 | 11 | 83 | *nan* |
+| ... | ... | ... | ... | ... |
+
+then you can generate a palette diagram and `data_ordering.csv` by 
+
+```python
+pt.palette_diagram(df, index='data_id')
+```
+
+
+### Output
 
 A linear palette diagram or circular palette diagram.
 
 ### Optional parameters
 
-|argument|type|default value|description|
+|argument|type/values|default value|description|
 |:--|:--:|:--:|:--|
-| palette_type |'circular', 'linear'| 'circular' |  'circular': circular palette diagram </br> 'linear': linear palette diagram|
+| palette_type |{'circular', 'linear'}| 'circular' |  'circular': circular palette diagram </br> 'linear': linear palette diagram|
 | n_neighbors | integer | 100 | A hyperparameter for the linear palette diagram (see below for details) |
 | n_epochs | integer | 100 | A hyperparameter for the circular palette diagram (see below for details) |
 | lr | float | 0.0005 | A hyperparameter for the circular palette diagram (see below for details) |
@@ -79,9 +96,7 @@ A linear palette diagram or circular palette diagram.
 | category_labels | list of category labels | None | If provided, you can manually control the color assignment of each category by specifying the order of category labels. |
 | cmap_name | string | None | If a qualitative color palette in *matplotlib* is provided, the specified color map is will be used. |
 | remove\_empty\_sets | {0,1,2,-1} | -1 | 0: Remove all empty (zero-valued) rows (data) </br> 1: Remove all empty (zero-valued) columns (categories) </br> 2: Remove all empty (zero-valued) rows and columns </br> -1: Ignored |
-
-
-
+| index | string | None | If provided, the specified column in the DataFrame will be used as a set of dataset indices. If None, a set of consecutive numbers is assigned as the dataset indices.|
 
 
 ## Order optimization
