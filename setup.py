@@ -15,7 +15,7 @@ REQUIRED_PACKAGES = [
 
 setuptools.setup(
     name="palette_diagram",
-    version="1.1.0",
+    version="1.1.1",
     author="Chihiro Noguchi and Tatsuro Kawamoto",
     author_email="chihiro3abc@gmail.com, kawamoto.tatsuro@gmail.com",
     description="Visualization tool for collective categorical data",

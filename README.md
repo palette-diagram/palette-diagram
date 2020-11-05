@@ -46,7 +46,7 @@ pt.palette_diagram(df)
 ### Input
 
 A data table `df` in *pandas* DataFrame. 
-Each row represents a categorical data of a data element. 
+Each row represents a categorical dataset. 
 Here is how the DataFrame should look like: 
 
 | category A | category B | category C | category C |
@@ -117,8 +117,8 @@ We strongly recommend users to try various values of these hyperparameters, as t
 ## References
 - Please cite the following paper when you use the palette diagram: 
 
-Chihiro Noguchi and Tatsuro Kawamoto, "Palette diagram: A Python package for visualization of collective categorical data," *in preparation*, (2020).
+Chihiro Noguchi and Tatsuro Kawamoto, "Palette diagram: A Python package for visualization of collective categorical data," [arXiv:2011.01934](https://arxiv.org/abs/2011.01934) (2020).
 
 - You can find more details about the (linear) palette diagram in the following article: 
 
-Chihiro Noguchi and Tatsuro Kawamoto, "Evaluating network partitions through visualization," arXiv:1906.00699, *unpublished* (2019).
+Chihiro Noguchi and Tatsuro Kawamoto, "Evaluating network partitions through visualization," [arXiv:1906.00699](https://arxiv.org/abs/1906.00699), *unpublished* (2019).
