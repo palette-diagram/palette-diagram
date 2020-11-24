@@ -160,6 +160,7 @@ def circular_palette_diagram(df, n_neighbors, n_epochs, lr, norm, export, export
     # ////////////////////////
 
     angles = ((2 * np.pi) / (X.shape[0])) * np.arange(X.shape[0])
+    angles = np.append(angles, angles[0])
 
     areas = np.sum(X, axis=0)
     layer_order = np.argsort(areas)[::-1]
@@ -216,7 +217,7 @@ def circular_palette_diagram(df, n_neighbors, n_epochs, lr, norm, export, export
             continue
 
         y1 = np.ones(angles.size) * yticks[i+1]
-        y2 = y1 + X[:, i - 1]
+        y2 = y1 + np.append(X[:, i - 1], X[0, i - 1])
         plt.fill_between(angles, y1, y2, facecolor=color_list[i - 1], alpha=0.7, label=category_labels_internal[i-1])
     plt.legend(bbox_to_anchor=(1.01, 1), loc='upper left', borderaxespad=0, fontsize=16)
 
@@ -224,7 +225,7 @@ def circular_palette_diagram(df, n_neighbors, n_epochs, lr, norm, export, export
         plt.tight_layout()
         export_palette_diagram(palette_type='circular')
     if export_table == True:
-        export_ordering(df, order, angles=angles, index=index)
+        export_ordering(df, order, angles=angles[:-1], index=index)
 
 
 def linear_palette_diagram(df, n_neighbors, norm, export, export_table, category_labels, cmap_name, index):
